@@ -1,0 +1,70 @@
+classDiagram
+    AchievementSystem *-- Achievement
+    Achievement *-- Condition
+    StatCondition <-- Stat
+    AchievementSystem *-- Stat
+    Stat <|-- NumericalStat
+    Stat <|-- BooleanStat
+    Condition <|-- StatCondition
+    Condition <|-- InjectedCondition
+    StatCondition <|-- NumericalStatCondition
+    NumericalStatCondition <|-- ITrackable
+
+    class AchievementSystem~TStatID, TAchievementID~{
+      +Dictionary~TAchievementID, Achievement~ Achievements
+      +Dictionary~TStatID, Stat~ Stats %% CRTP
+      +Action~TAchievementID~ OnAchievementCompleted
+      +Action~TAchievementID, Progress~ OnProgressMade
+      +AddAchievement(TAchievementID id, AchievementBuilder achievementBuilder)
+      +RemoveAchievement(TAchievementID id)
+      +bool IsAchieved(TAchievementID id)
+      +Progress GetAchievementProgress(TAchievementID id)
+      +bool IsAchievementVisible(TAchievementID id)
+      +UpdateAchievement(TAchievementID id)
+      +SetStat~T~(StatID id, T value)
+      +IncreaseStat~T~(TStatID id) %% T : INumber
+      +DecreaseStat~T~(TStatID id) %% T : INumber
+      +IncreaseStat~T~(TStatID id, T amount) %% T : INumber
+      +DecreaseStat~T~(TStatID id, T amount) %% T : INumber
+      +CheckedIncreaseStat~T~(TStatID id) %% T : INumber
+      +CheckedDecreaseStat~T~(TStatID id) %% T : INumber
+      +CheckedIncreaseStat~T~(TStatID id, T amount = 1) %% T : INumber
+      +CheckedDecreaseStat~T~(TStatID id, T amount = 1) %% T : INumber
+    }
+
+    class AchievementBuilder{
+        +AchievementBuilder()
+        +AchievementBuilder AddStatEqualityCondition~TStatType~(TStatId, TStatType value) %% All Stats
+        +AchievementBuilder AddStatGreaterCondition~TStatType~(TStatId, TStatType value)  %% Only INumber Stats
+        +AchievementBuilder AddStatGreaterEqualsCondition~TStatType~(TStatId, TStatType value)  %% Only INumber Stats
+        +AchievementBuilder AddStatEqualsCondition~TStatType~(TStatId, TStatType value) %% Only INumber Stats
+        +AchievementBuilder AddStatLesserEqualsCondition~TStatType~(TStatId, TStatType value)  %% Only INumber Stats
+        +AchievementBuilder AddStatLesserCondition~TStatType~(TStatId, TStatType value)  %% Only INumber Stats
+        +AchievementBuilder AddStatTrueCondition~TStatType~(TStatId, TStatType value)  %% Only bool Stats
+        +AchievementBuilder AddStatFalseCondition~TStatType~(TStatId, TStatType value) %% Only bool Stats
+        +AchievementBuilder AddInjectedCondition(Predicate predicate) %% Has to be updated manually
+        +AchievementBuilder AddInjectedProgressTracker(Func<Progress> progressTracker) %% Has to be updated manually
+        +AchievementBuilder AddStatProgressTracker~TStatType~(TStatId, TStatType target) %% Only works for UInts.
+        +AchievementBuilder MakeInvisible()
+        +Achievement Build(); %% internal
+    }
+    class Stat~T~{
+        +T Value;
+        SetValue();
+        +Acion~T~ OnValueChanged;
+    }
+    class Achievement{
+        +bool IsVisible
+        +Progress Progress
+        +Func<Progress> InjectedProgressTracker
+        +Action~Achievement~ OnAchieved
+        +Action~Progress~ OnProgressMade
+        +Achievement(bool isVisisble, InjectedProgressTracker = null, IList<Condition> conditions, IList<Condition> injectedConditions)
+        +Update()
+    }
+    class Condition{
+        +Action~Condition~ OnConditionTrue
+        +Action~Condition~ OnConditionFalse
+        +Condition(Func<Progress> progressTracker)
+        +Update()
+    }
