@@ -1,14 +1,7 @@
 classDiagram
     AchievementSystem *-- Achievement
     Achievement *-- Condition
-    StatCondition <-- Stat
     AchievementSystem *-- Stat
-    Stat <|-- NumericalStat
-    Stat <|-- BooleanStat
-    Condition <|-- StatCondition
-    Condition <|-- InjectedCondition
-    StatCondition <|-- NumericalStatCondition
-    NumericalStatCondition <|-- ITrackable
 
     class AchievementSystem~TStatID, TAchievementID~{
       +Dictionary~TAchievementID, Achievement~ Achievements
