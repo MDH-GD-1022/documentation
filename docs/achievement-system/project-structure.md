@@ -1,3 +1,4 @@
+```mermaid
 classDiagram
     AchievementSystem *-- Achievement
     Achievement *-- Condition
@@ -61,3 +62,4 @@ classDiagram
         +Condition(Func<Progress> progressTracker)
         +Update()
     }
+```
