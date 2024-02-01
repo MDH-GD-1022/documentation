@@ -1,3 +1,5 @@
+# <span style="color:DodgerBlue">public class</span> <span style="color:SeaGreen">Stat</span><<span style="color:MediumSeaGreen">T</span>>
+
 ## Description
 
 abc
@@ -6,7 +8,7 @@ abc
 
 ### <span style="color:DodgerBlue">public</span> Action<<span style="color:MediumSeaGreen">T</span>> OnValueChanged = <span style="color:DodgerBlue">delegate</span> { }
 
-abs
+abc
 
 ### <span style="color:DodgerBlue">private</span> <span style="color:MediumSeaGreen">T</span> _value
 
