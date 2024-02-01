@@ -4,7 +4,7 @@ abc
 
 ## Properties
 
-### <span style="color:DodgerBlue">public</span> Action<<span style="color:MediumSeaGreen">T</span>> OnValueChanged = <span style="color:DodgerBlue">delegate</span> { };
+### <span style="color:DodgerBlue">public</span> Action<<span style="color:MediumSeaGreen">T</span>> OnValueChanged = <span style="color:DodgerBlue">delegate</span> { }
 
 abs
 
