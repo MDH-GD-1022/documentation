@@ -1,4 +1,9 @@
-site_name: My Docs
+site_name: Achievement System
+site_description: Documentation of an Achievement System.
+copyright: openSource
+nav:
+  - 'index.md'
+  - 'about.md'
 theme:
   name: material
 markdown_extensions:
