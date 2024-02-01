@@ -22,8 +22,3 @@ abc
 
 abc
 
-### function 2
-
-abc
-
-## 
