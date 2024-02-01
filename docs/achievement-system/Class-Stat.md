@@ -4,7 +4,7 @@ abc
 
 ## Properties
 
-### property 1
+### <span style="color:blue">private</span> <span style="color:green">T</span> Value
 
 abc
 
