@@ -4,17 +4,21 @@ abc
 
 ## Properties
 
-### <span style="color:blue">private</span> <span style="color:green">T</span> Value
+### ### <span style="color:DodgerBlue">public</span> Action<<span style="color:MediumSeaGreen">T</span>> OnValueChanged = <span style="color:DodgerBlue">delegate</span>
+
+abs
+
+### <span style="color:DodgerBlue">private</span> <span style="color:MediumSeaGreen">T</span> _value
 
 abc
 
-### property 2
+### <span style="color:DodgerBlue">public</span> <span style="color:MediumSeaGreen">T</span> Value
 
 abc
 
 ## Functions
 
-### function 1
+### <span style="color:DodgerBlue">public</span> <span style="color:SeaGreen">Stat</span>(<span style="color:MediumSeaGreen">T</span> <span style="color:DarkTurquoise">value</span>)
 
 abc
 
