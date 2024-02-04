@@ -20,10 +20,19 @@ Stat : +TStatType Value
 Stat : ~Stat(TStatType value)
 Stat : +Action~Stat~TStatType~~ OnValueChanged
 
-class Achievement~TAchievementID~
+class Achievement~TAchievementID~["~Achievement"]
 AchievementSystem *-- Achievement : composition
 Achievement : --HashSet~Condition~ _conditions
+Achievement : --HashSet~Condition~ _injectedConditions
+Achievement : ~Func~float~ _progressTracker
+Achievement : +float Progress
 Achievement : +Action~Achievement~ OnAchieved
+Achievement : +Action~Achievement~ OnProgressMade
+Achievement : ~Achievement()
+Achievement : +AddCondition(Condition condition)
+Achievement : +AddInjectedCondition(Condition condition)
+Achievement : +AddProgressTracker(Func~float~ progressTracker)
+Achievement : +Update()
 
 class Condition
 <<Abstract>> Condition
@@ -34,6 +43,7 @@ Condition : -bool isTrue
 Condition : +bool IsTrue
 Condition : #bool IsConditionTrue()
 Condition : +Update()
+Condition : ~Condition()
 
 class StatCondition~TStatType~
 <<Abstract>> StatCondition
