@@ -2,7 +2,7 @@ Stats
 ===
 The achievement system heavily relies on keeping track of stats.
 Stats can be any value of any type stored under any ID you choose to provide.
-You can change the value of stats, which will call the OnValueChanged Event on the stat object.
+You can change the value of stats, which will call the `OnValueChanged` Event on the stat object.
 
 ### Adding Stats
 Considering you already have an achievement system that uses strings as ids for both stats and achievements:
@@ -19,7 +19,7 @@ The second parameter specifies the initial value of the stat. In this case it's 
 
 ### Updating Stats
 Using the same AchievementSystem instance as before, you can access the "Tea spilled" stat object using the `TryGetStat` method.
-You can then use the `Value`` property of a stat object to get or set the value to anything you want.
+You can then use the `Value` property of a stat object to get or set the value to anything you want.
 ```cs
 public void SpillTea()
 {
@@ -50,7 +50,7 @@ public class TeaSpiller
 ```
 
 ### What if the stat doesn't exist yet?
-If the stat you want to update doesn't yet exist, you can use the `TeySetStat` method.
+If the stat you want to update doesn't yet exist, you can use the `TrySetStat` method.
 ```cs
 public void SpillTea()
 {
