@@ -1,17 +1,32 @@
-# Welcome to MkDocs
+AchievementSystem
+===
+Achievement System instances manage [Stats](Concepts/Stats.md) and [Achievements](Concepts/Achievements.md).
+Once an achievement of the system is achieved, the `OnAchieved` event will be invoked.
+If an achievement makes progress, the `OnProgressMade` event will be invoked.
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+---
+# Stats
+Full article: [Click here](Concepts/Stats.md)
 
-## Commands
+Stats have to be created using the `AddStat` function of an AchievementSystem instance.
+Stats can contain any value of a specified type.
+Their value can be changed using their `Value` property.
+Once the value is changed, stats will invoke their `OnValueChanged` event.
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+---
+# Conditions
+Full article: [Click here](Concepts/Conditions.md)
 
-## Project layout
+Conditions are objects that can check something. They keep track of their current state. It can be accessed using using the `IsTrue` property.
+Whenever their state changes, conditions will invoke their `OnConditionTrue` or `OnConditionFalse` events.
+Conditions can be updated by calling their `Update` function. This will check the condition and update the state.
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+---
+# Achievements
+Full article: [Click here](Concepts/Achievements.md)
+
+Achievements are defined as a set of conditions. Once all conditions are true simultaneously, the achievement is achieved.
+Achievements have to be created using the `AddAchievement` function of an AchievementSystem instance.
+To check if progress was made you can use the `TryUpdateAchievement` function
+Once progress is made towards completing an achievement, the Achievement System will invoke the `OnProgressMade` event.
+Once an achievement is achieved, the Achievement System will invoke the `OnAchieved` event.
