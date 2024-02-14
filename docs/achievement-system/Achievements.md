@@ -1,58 +1,68 @@
 Achievements
 ===
-Achievements are defined as a set of conditions.
-Once all conditions are true, the achievement is unlocked.
+Achievements are defined as a set of conditions. Once all conditions are true simultaneously, the achievement is achieved.
+Achievements have to be created using the `AddAchievement` function of an AchievementSystem instance.
 
-## AchievementBuilder
-You can use AchievementBuilder instances to specify which types of conditions an achievement should contain.
-```cs
-AchievementBuilder achievementBuilder = new()
-    .AddStatGreaterEqualsCondition("Tea spilled", 10);
-```
-You can add as many conditions as you like. The AchievementBuilder utilises the fluent pattern.
-```cs
-AchievementBuilder achievementBuilder2 = new()
-    .AddStatGreaterEqualsCondition("Tea spilled", 10);
-    .AddStatGreaterEqualsCondition("Frogs scared", 4);
-    .AddStatTrueCondition("Is Unlockable");
-```
+To check if an achievement was achieved you can use the `IsAchieved` function.
+Once an achievement is achieved, the AchievementSystem will invoke its `OnAchieved` event.
 
-## How to add achievements?
-Considering you already have an achievement system that uses strings as ids for both stats and achievements:
+To get the current progress of an achievement, you can use the `GetAchievementProgress` function.
+To make the system check, if progress was made, you can use the `TryUpdateAchievement` function.
+Once progress towards completing an achievement is noticed, the AchievementSystem will invoke its `OnProgressMade` event.
+
+---
+# Adding Achievements
+To add achievements you need to specify which conditions the achievement should depend on.
+This can be done using an AchievementBuilder instance.
 ```cs
-AchievementSystem<string, string> achievementSystem = new();
+achievementSystem<string, string> achievementSystem = new();
+achievementSystem.AddStat<uint>("frogs kissed", out Stat<uint> stat);
+
+achievementSystem.AddAchievement("10 frogs kissed", new AchievementBuilder().AddStatGreaterEqualsCondition(stat, 10));
 ```
 
-Once you created the achievementBuilder you can pass it as an argument to the achievement system's `TryAddAchievement` function.
-This is also the place where you specify which ID to store the achievement under.
+The Achievement Builder uses the fluent pattern for all it's functions.
+The creation of a multiconditional achievement may look like this:
 ```cs
-achievementSystem.TryAddAchievement("10TeaSpilled", achievementBuilder);
+achievementSystem.AddStat<bool>("Hyla arborea kissed", out Stat<bool> hylaArboreaKissed);
+achievementSystem.AddStat<bool>("phyllobates terribilis kissed", out Stat<bool> phyllobatesTerribilisKissed);
+
+achievementSystem.AddAchievement
+(
+    "All frog types kissed",
+    new AchievementBuilder()
+        .AddStatTrueCondition(phyllobatesTerribilisKissed)
+        .AddStatTrueCondition(hylaArboreaKissed)
+);
 ```
 
-## Stat based Conditions
-We recommend using stat based conditions wherever possible.
-These solely rely on stats and will update automatically whenever the associated stats change.
+It is recommended to mostly rely on stat based conditions. These will update automatically, whenever the stat's value is changed.
 
-- **StatGreaterCondition**s are true when a specific stat's value is greater than a specified value.
-- **StatGreaterEqualsCondition**s are true when a specific stat's value is greater than or equal to a specified value.
-- **StatEqualsCondition**s are true when a specific stat's value is equal to a specified value.
-- **StatLesserEqualsCondition**s are true when a specific stat's value is lesser than or equal to a specified value.
-- **StatLesserCondition**s are true when a specific stat's value is lesser than a specified value.
-- **StatTrueCondition**s are true when a specific bool stat's value is true.
-- **StatFalseCondition**s are true when a specific bool stat's value is false.
+You can also create your own types of conditions, if you want to.
 
-## InjectedConditions
-Since we don't want to limit you to using our own rudimentary stat tracking system, we also allow conditions which you can pass your own function to.
+---
+# Tracking an achievement's progress
+If you want to be able to track an achievement's progress, you have to set a progress tracker in the AchievementBuilder.
+Progress Trackers are functions that return a float between 0 and 1.
 
-An **InjectedCondition** is true, when a provided function returns true.
+- 0 means that no progress has been made.
+- 0.5 means that it's half way done.
+- 1 means that it's done.
+```cs
+achievementSystem<string, string> achievementSystem = new();
+achievementSystem.AddStat<uint>("frogs kissed", out Stat<uint> stat);
 
-You can use these if you have your own stat tracking system already or if you want more complex conditions without tracking stats.
+achievementSystem.AddAchievement(
+    "10 frogs kissed",
+    new AchievementBuilder()
+        .AddStatGreaterEqualsCondition(stat, 10)
+        .SetProgressTracker(_ => {return (float)stat.Value / 10;})
+);
+```
 
-These can not update automatically however. You will have to call the `TryUpdateAchievement` function in the AchievementSystem to update an achievement that uses injected conditions.
+You can use the TryUpdateAchievement function of the achievementSystem to update an Achievement's progress.
+```cs
+achievementSystem.TryUpdateAchievemend("frogs kissed");
+```
 
-
-## How to check if achievements are completed?
-There are two ways to check if an achievement is achieved:
-
-1. Whenever any achievement completes, the `OnAchievementCompleted` event of the achievement system is invoked. The achievement id is passed as a parameter.
-2. Use `IsAchieved` to check if an achievement is achieved.
+This will make the AchievementSystem call the `OnProgressMade` event if necessary

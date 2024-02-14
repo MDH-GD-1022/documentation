@@ -1,53 +1,77 @@
 Stats
 ===
-The achievement system heavily relies on keeping track of stats.
-Stats can be any value of any type stored under any ID you choose to provide.
-You can change the value of stats, which will call the `OnValueChanged` Event on the stat object.
+Stats can contain any value of a specified type.
+Stats have to be created using the `AddStat` function of an AchievementSystem instance.
+Their value can be changed using their `Value` property.
+Once the value is changed, stats will invoke their `OnValueChanged` event.
+
 ---
-## Adding Stats
-Considering you already have an achievement system that uses strings as ids for both stats and achievements:
+# Adding Stats
+Stats can only be created using an Achievement System instance.
+
+In the following, an Achievement System that uses string ids will be used.
 ```cs
 AchievementSystem<string, string> achievementSystem = new();
 ```
 
-Adding a stat is as simple as:
+The most simple way to add a stat of a type is to only provide a stat ID.
+The Achievement System will then create a new Stat of the specified type and store it under the provided id.
+The initial value will be the Type's specified default. (in this case: 0)
 ```cs
-achievementSystem.TryAddStat<uint>("Frogs kissed", 0);
-```
-This stat is of type `uint` and is supposed to track the amount of times that frogs were kissed.
-The second parameter specifies the initial value of the stat. In this case it's 0. No frogs have been kissed yet.
-
-### Overloads
-There is an optional out parameter that allows retrieving the newly created stat instantly.
-```cs
-achievementSystem.TryAddStat<uint>("Chameleons found", out Stat<uint> stat, 0);
+achievementSystem.AddStat<uint>("frogs kissed");
 ```
 
-Providing no initial value, will make the stat use the Type's default value.
+## Optional Parameters
+It is possible to provide a value, which will then be used as the stat's initial value instead of the Type's specified default.
 ```cs
-achievementSystem.TryAddStat<uint>("Parrots greeted");
-achievementSystem.TryAddStat<uint>("Porcupines hugged", out Stat<uint> stat);
+achievementSystem.AddStat<uint>("chameleons found", 5);
 ```
+
+It is possible to instantly get a reference to the created stat by providing an out parameter.
+```cs
+achievementSystem.AddStat<uint>("porcupines hugged", out Stat<uint> stat);
+```
+
+## Exceptionless Try Methods
+`AddStat` will throw an exception, if the Achievement System already contains a Stat using the same type and id.
+
+Use `TryAddStat`, if you don't want the code to throw exceptions. This function will return a bool indicating whether or not the operation was successful.
+```cs
+achievementSystem.TryAddStat<uint>("frogs kissed");
+achievementSystem.TryAddStat<uint>("chameleons found", 5);
+achievementSystem.TryAddStat<uint>("porcupines hugged", out Stat<uint> stat);
+```
+
 ---
+# Retrieving Stats
+Once you have created a stat in the Achievement System, you can get access to the stat object by using `GetStat`.
+Access to the Stat object allows modifying it's value.
 
-## Retrieving Stats
-Using the same AchievementSystem instance as before, you can access any stat object using the `TryGetStat` method.
 ```cs
-achievementSystem.TryGetStat<uint>("Frogs kissed", out Stat<uint> frogsKissed);
+achievementSystem.GetStat<uint>("frogs kissed").Value++;
 ```
+
+## Exceptionless Try Method
+`GetStat` will throw an exception, if the Achievement System can not find the stat.
+
+Use `TryGetStat`, if you don't want the code to throw exceptions. This function will return a bool indicating whether or not the operation was successful. The stat will be provided using an out parameter.
+```cs
+if (achievementSystem.TryGetStat<uint>("chameleons found", out Stat<uint> stat))
+    stat.Value++;
+```
+
 ---
+# Changing a Stat's value
+If you only want to modify a Stat's value and don't need the Stat Object, you can use `SetStat` instead.
 
-## Updating Stats
-Once you have access to a stat object, you can modify its `Value` property.
-The achievement system will update all conditions and achievements in the background.
 ```cs
-public void KissPhyllobatesTerribilis()
-{
-    frogsKissed.Value++;
-}
+achievementSystem.SetStat<uint>("porcupines hugged", 10);
 ```
 
-If you don't have access to a stat object and are uncertain whether the stat you want to update even exist, you can use the `TrySetStat` method.
+## Exceptionless Try Method
+`SetStat` will throw an exception, if the Achievement System can not find the stat.
+
+Use `TrySetStat`, if you don't want the code to throw exceptions. This function will return a bool indicating whether or not the operation was successful.
 ```cs
-achievementSystem.TrySetStat<uint>("lemons slayed", 10)
+achievementSystem.TrySetStat<uint>("Elephants hidden", 15);
 ```

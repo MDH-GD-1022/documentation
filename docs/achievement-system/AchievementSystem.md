@@ -1,30 +1,32 @@
 AchievementSystem
 ===
-In order to use the AchievementSystem, you first need to create an instance of the AchievementSystem class. <br/>
-This instance serves as the main point of interaction.
-it can be used to manage [Stats](Stats.md) and [Achievements](Achievements.md)
-```cs
-AchievementSystem<string, string> achievementSystem = new();
-```
+Achievement System instances manage [Stats](Stats.md) and [Achievements](Achievements.md).
+Once an achievement of the system is achieved, the `OnAchieved` event will be invoked.
+If an achievement makes progress, the `OnProgressMade` event will be invoked.
 
-### Stats
+---
+# Stats
 Full article: [Click here](Stats.md)
 
-Stats can be any value of any type stored under any ID you choose to provide.
+Stats have to be created using the `AddStat` function of an AchievementSystem instance.
+Stats can contain any value of a specified type.
+Their value can be changed using their `Value` property.
+Once the value is changed, stats will invoke their `OnValueChanged` event.
 
-You can add stats using `TryAddStat`, retrieve the stat objects and the current value by calling `TryGetStat`.
-Stat objects allow retrieving or changing the value and subscribing to the stat's `OnValueChanged` event.
+---
+# Conditions
+Full article: [Click here](Conditions.md)
 
-### Achievements
+Conditions are objects that can check something. They keep track of their current state. It can be accessed using using the `IsTrue` property.
+Whenever their state changes, conditions will invoke their `OnConditionTrue` or `OnConditionFalse` events.
+Conditions can be updated by calling their `Update` function. This will check the condition and update the state.
+
+---
+# Achievements
 Full article: [Click here](Achievements.md)
 
-Achievements are defined as a set of conditions.
-Once all conditions are true, the achievement is unlocked.
-
-### Custom Stat and Achievement Data
-While creating the AchievementSystem instance you can specify two generic types:
-
-- `TStatID` The Type to use as an identifier for stats
-- `TAchievementID` The type to use as an identifier for achievements
-
-These can be used for providing any additional data you may need.
+Achievements are defined as a set of conditions. Once all conditions are true simultaneously, the achievement is achieved.
+Achievements have to be created using the `AddAchievement` function of an AchievementSystem instance.
+To check if progress was made you can use the `TryUpdateAchievement` function
+Once progress is made towards completing an achievement, the Achievement System will invoke the `OnProgressMade` event.
+Once an achievement is achieved, the Achievement System will invoke the `OnAchieved` event.
